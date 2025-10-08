@@ -316,10 +316,23 @@ export default function IQTestPage() {
       
       if (response.ok) {
         const data = await response.json()
+        console.log('Dados do pagamento:', data)
+        
         // Redirecionar para o checkout do Mercado Pago
-        // Em ambiente de teste, usar sandbox_init_point
-        const checkoutUrl = data.sandbox_init_point || data.init_point
-        window.location.href = checkoutUrl
+        // Priorizar sandbox_init_point para ambiente de teste
+        let checkoutUrl
+        if (data.is_test && data.sandbox_init_point) {
+          checkoutUrl = data.sandbox_init_point
+        } else {
+          checkoutUrl = data.init_point
+        }
+        
+        if (checkoutUrl) {
+          console.log('Redirecionando para:', checkoutUrl)
+          window.location.href = checkoutUrl
+        } else {
+          throw new Error('URL de checkout não encontrada')
+        }
       } else {
         throw new Error('Erro ao criar preferência de pagamento')
       }
