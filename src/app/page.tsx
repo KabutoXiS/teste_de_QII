@@ -317,30 +317,16 @@ export default function IQTestPage() {
       if (response.ok) {
         const data = await response.json()
         // Redirecionar para o checkout do Mercado Pago
-        window.location.href = data.init_point
+        // Em ambiente de teste, usar sandbox_init_point
+        const checkoutUrl = data.sandbox_init_point || data.init_point
+        window.location.href = checkoutUrl
       } else {
-        // Para demonstração, simular pagamento aprovado após 2 segundos
-        setTimeout(() => {
-          localStorage.setItem('iq-test-payment', 'completed')
-          setQuizState({
-            ...quizState,
-            paymentCompleted: true
-          })
-          setCurrentScreen('result')
-          setIsProcessingPayment(false)
-        }, 2000)
+        throw new Error('Erro ao criar preferência de pagamento')
       }
     } catch (error) {
-      // Para demonstração, simular pagamento aprovado
-      setTimeout(() => {
-        localStorage.setItem('iq-test-payment', 'completed')
-        setQuizState({
-          ...quizState,
-          paymentCompleted: true
-        })
-        setCurrentScreen('result')
-        setIsProcessingPayment(false)
-      }, 2000)
+      console.error('Erro no pagamento:', error)
+      alert('Erro ao processar pagamento. Tente novamente.')
+      setIsProcessingPayment(false)
     }
   }
 
