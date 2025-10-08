@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 
-// Configuração do Mercado Pago
+// Configuração do Mercado Pago para ambiente de teste
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
-  options: { timeout: 5000 }
+  options: { 
+    timeout: 5000,
+    // Forçar ambiente de teste quando usando chaves TEST-
+    ...(process.env.MERCADOPAGO_ACCESS_TOKEN?.startsWith('TEST-') && {
+      sandbox: true
+    })
+  }
 })
 
 export async function POST(request: NextRequest) {
@@ -61,6 +67,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json({ 
     status: 'Webhook ativo',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    environment: process.env.MERCADOPAGO_ACCESS_TOKEN?.startsWith('TEST-') ? 'test' : 'production'
   })
 }
