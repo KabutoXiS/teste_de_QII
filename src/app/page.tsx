@@ -356,7 +356,14 @@ export default function IQTestPage() {
       console.error('Erro no pagamento:', error)
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
       setPaymentError(errorMessage)
+      // CORREÇÃO: Sempre resetar o estado de processamento quando há erro
       setIsProcessingPayment(false)
+    } finally {
+      // CORREÇÃO: Garantir que o estado seja resetado em qualquer caso de erro
+      // Não resetar aqui se o pagamento foi bem-sucedido (redirecionamento)
+      if (paymentError) {
+        setIsProcessingPayment(false)
+      }
     }
   }
 
