@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Brain, CheckCircle, Trophy, Share2, Lock } from 'lucide-react'
+import { Brain, Star, Zap, Puzzle, Lightbulb, Clock, Lock, BarChart3, CheckCircle, Trophy, Share2 } from 'lucide-react'
 
 // Tipos TypeScript
 interface Question {
@@ -38,10 +38,10 @@ const questions: Question[] = [
   },
   {
     id: 3,
-    question: "Quantos triângulos você consegue contar na figura? (Imagine um triângulo grande dividido em 9 triângulos menores)",
-    options: ["9", "13", "16", "18"],
+    question: "Complete a sequência de cores: AZUL, VERDE, AMARELO, ?",
+    options: ["VERMELHO", "LARANJA", "ROXO", "ROSA"],
     correctAnswer: 1,
-    category: "attention"
+    category: "pattern"
   },
   {
     id: 4,
@@ -366,59 +366,145 @@ export default function IQTestPage() {
     }
   }
 
-  // Tela Inicial
+  // Landing Page Principal
   if (currentScreen === 'home') {
     return (
-      <div className="min-h-screen bg-[#F5F9FF] flex flex-col">
-        <div className="flex-1 flex items-center justify-center p-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="mb-8">
-              <Brain className="w-20 h-20 text-[#7C3AED] mx-auto mb-6" />
-              <h1 className="text-4xl md:text-6xl font-bold text-[#1E293B] mb-4 font-inter">
-                Descubra seu verdadeiro QI agora 🧠
-              </h1>
-              <p className="text-xl text-[#1E293B]/80 mb-8 font-inter">
-                Responda 25 perguntas rápidas e descubra como está sua inteligência comparada à média mundial.
-              </p>
+      <div className="min-h-screen bg-[#F9FAFB]">
+        {/* Hero Section com Gradiente */}
+        <div className="bg-gradient-to-br from-[#2563EB] to-[#7C3AED] relative overflow-hidden">
+          {/* Formas geométricas de fundo */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 border-2 border-white rotate-45"></div>
+            <div className="absolute top-32 right-20 w-16 h-16 bg-white rounded-full"></div>
+            <div className="absolute bottom-20 left-1/4 w-12 h-12 border-2 border-white"></div>
+            <div className="absolute bottom-32 right-1/3 w-8 h-8 bg-white transform rotate-45"></div>
+          </div>
+          
+          <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 text-center">
+            {/* Ícone do cérebro digital */}
+            <div className="mb-8 animate-pulse">
+              <Brain className="w-24 h-24 md:w-32 md:h-32 text-white mx-auto mb-4" />
             </div>
             
-            <div className="bg-white rounded-2xl p-8 shadow-2xl mb-8">
-              <div className="grid md:grid-cols-3 gap-6 mb-8">
-                <div className="text-center">
-                  <CheckCircle className="w-12 h-12 text-[#FACC15] mx-auto mb-3" />
-                  <h3 className="font-semibold text-[#1E293B] mb-2">Rápido</h3>
-                  <p className="text-sm text-[#1E293B]/70">Apenas 10-15 minutos</p>
-                </div>
-                <div className="text-center">
-                  <Brain className="w-12 h-12 text-[#FACC15] mx-auto mb-3" />
-                  <h3 className="font-semibold text-[#1E293B] mb-2">Científico</h3>
-                  <p className="text-sm text-[#1E293B]/70">Baseado em métodos comprovados</p>
-                </div>
-                <div className="text-center">
-                  <Trophy className="w-12 h-12 text-[#FACC15] mx-auto mb-3" />
-                  <h3 className="font-semibold text-[#1E293B] mb-2">Preciso</h3>
-                  <p className="text-sm text-[#1E293B]/70">Resultado detalhado</p>
-                </div>
-              </div>
-              
-              <button
-                onClick={startQuiz}
-                className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                Começar o Teste
-              </button>
-            </div>
+            {/* Título principal */}
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-inter leading-tight">
+              Descubra agora seu verdadeiro nível de inteligência!
+            </h1>
             
-            <p className="text-sm text-[#1E293B]/60">
-              ✨ Mais de 100.000 pessoas já descobriram seu QI conosco
+            {/* Subtítulo */}
+            <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-4xl mx-auto font-inter">
+              Baseado em perguntas de lógica e raciocínio, este teste rápido revela seu QI estimado em menos de 5 minutos.
+            </p>
+            
+            {/* CTA Principal */}
+            <button
+              onClick={startQuiz}
+              className="bg-white text-[#2563EB] font-bold text-xl px-12 py-4 rounded-2xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 shadow-2xl animate-pulse"
+            >
+              COMEÇAR TESTE AGORA
+            </button>
+            
+            <p className="text-white/80 text-sm mt-4">
+              Mais de 10.000 pessoas já testaram sua inteligência com este desafio.
             </p>
           </div>
         </div>
-        
-        <footer className="bg-white border-t border-gray-200 p-4 text-center">
-          <p className="text-sm text-[#1E293B]/60">
-            Este teste é apenas para fins de entretenimento. Resultados não substituem testes oficiais de QI.
-          </p>
+
+        {/* Seção: Por que fazer este teste */}
+        <div className="py-16 md:py-24">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-16">
+              Por que fazer este teste?
+            </h2>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+              <div className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <Star className="w-12 h-12 text-[#2563EB] mx-auto mb-4" />
+                <h3 className="font-bold text-gray-800 mb-3">Avalie sua capacidade</h3>
+                <p className="text-gray-600 text-sm">de raciocínio lógico e memória</p>
+              </div>
+              
+              <div className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <Zap className="w-12 h-12 text-[#A78BFA] mx-auto mb-4" />
+                <h3 className="font-bold text-gray-800 mb-3">Compare seu resultado</h3>
+                <p className="text-gray-600 text-sm">com a média nacional</p>
+              </div>
+              
+              <div className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <Puzzle className="w-12 h-12 text-[#2563EB] mx-auto mb-4" />
+                <h3 className="font-bold text-gray-800 mb-3">Receba um relatório</h3>
+                <p className="text-gray-600 text-sm">com sua pontuação estimada</p>
+              </div>
+              
+              <div className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <Lightbulb className="w-12 h-12 text-[#A78BFA] mx-auto mb-4" />
+                <h3 className="font-bold text-gray-800 mb-3">Descubra se você está</h3>
+                <p className="text-gray-600 text-sm">entre os 3% com QI acima da média</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Seção de Instruções */}
+        <div className="bg-white py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold text-gray-800 text-center mb-12">
+                Como funciona o teste
+              </h2>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <Clock className="w-16 h-16 text-[#2563EB] mx-auto mb-4" />
+                  <h3 className="font-bold text-gray-800 mb-2">Duração média</h3>
+                  <p className="text-gray-600">3 a 5 minutos</p>
+                </div>
+                
+                <div className="text-center">
+                  <Lock className="w-16 h-16 text-[#A78BFA] mx-auto mb-4" />
+                  <h3 className="font-bold text-gray-800 mb-2">Seus dados são</h3>
+                  <p className="text-gray-600">totalmente confidenciais</p>
+                </div>
+                
+                <div className="text-center">
+                  <BarChart3 className="w-16 h-16 text-[#2563EB] mx-auto mb-4" />
+                  <h3 className="font-bold text-gray-800 mb-2">Resultado exibido</h3>
+                  <p className="text-gray-600">ao final do teste</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Final */}
+        <div className="bg-gradient-to-r from-[#2563EB] to-[#7C3AED] py-16">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+              Pronto para descobrir seu QI?
+            </h2>
+            
+            <button
+              onClick={startQuiz}
+              className="bg-white text-[#2563EB] font-bold text-2xl px-16 py-5 rounded-2xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 shadow-2xl mb-6"
+            >
+              COMEÇAR TESTE AGORA
+            </button>
+            
+            <p className="text-white/90 text-lg">
+              Mais de 10.000 pessoas já testaram sua inteligência com este desafio.
+            </p>
+          </div>
+        </div>
+
+        {/* Rodapé */}
+        <footer className="bg-gray-800 text-white py-8">
+          <div className="container mx-auto px-4 text-center">
+            <p className="mb-4">Teste de QI Online © 2025 — Todos os direitos reservados.</p>
+            <div className="flex justify-center space-x-6 text-sm text-gray-400">
+              <a href="#" className="hover:text-white transition-colors">Política de Privacidade</a>
+              <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
+            </div>
+          </div>
         </footer>
       </div>
     )
@@ -430,12 +516,12 @@ export default function IQTestPage() {
     const progress = ((quizState.currentQuestion + 1) / questions.length) * 100
 
     return (
-      <div className="min-h-screen bg-[#F5F9FF] p-4">
+      <div className="min-h-screen bg-[#F9FAFB] p-4">
         <div className="max-w-3xl mx-auto">
           {/* Header com progresso */}
           <div className="bg-white rounded-2xl p-6 mb-6 shadow-lg">
             <div className="flex justify-between items-center mb-4">
-              <span className="text-[#1E293B] font-semibold">
+              <span className="text-gray-800 font-semibold">
                 Pergunta {quizState.currentQuestion + 1} de {questions.length}
               </span>
             </div>
@@ -450,7 +536,7 @@ export default function IQTestPage() {
 
           {/* Pergunta */}
           <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h2 className="text-2xl font-bold text-[#1E293B] mb-8 font-inter">
+            <h2 className="text-2xl font-bold text-gray-800 mb-8 font-inter">
               {currentQ.question}
             </h2>
             
@@ -462,7 +548,7 @@ export default function IQTestPage() {
                   className={`w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ${
                     selectedAnswer === index
                       ? 'border-[#2563EB] bg-[#2563EB]/10 text-[#2563EB]'
-                      : 'border-gray-200 hover:border-[#2563EB]/50 text-[#1E293B]'
+                      : 'border-gray-200 hover:border-[#2563EB]/50 text-gray-800'
                   }`}
                 >
                   <span className="font-semibold mr-3">
@@ -495,27 +581,27 @@ export default function IQTestPage() {
   // Tela de Pagamento
   if (currentScreen === 'payment') {
     return (
-      <div className="min-h-screen bg-[#F5F9FF] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-4">
         <div className="max-w-md mx-auto">
           <div className="bg-white rounded-2xl p-8 shadow-2xl text-center">
             <div className="mb-6">
               <Trophy className="w-16 h-16 text-[#FACC15] mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
                 Parabéns! Teste Concluído
               </h2>
-              <p className="text-[#1E293B]/70">
+              <p className="text-gray-600">
                 Você respondeu todas as 25 perguntas
               </p>
             </div>
             
-            <div className="bg-[#F5F9FF] rounded-xl p-6 mb-6">
-              <h3 className="text-lg font-semibold text-[#1E293B] mb-2">
+            <div className="bg-[#F9FAFB] rounded-xl p-6 mb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
                 Para ver o resultado do seu QI, pague apenas:
               </h3>
               <div className="text-3xl font-bold text-[#2563EB] mb-2">
                 R$ 0,99
               </div>
-              <p className="text-sm text-[#1E293B]/60">
+              <p className="text-sm text-gray-600">
                 Pagamento único • Resultado imediato
               </p>
             </div>
@@ -535,9 +621,9 @@ export default function IQTestPage() {
               )}
             </button>
             
-            <div className="flex items-center justify-center gap-2 text-sm text-[#1E293B]/60">
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
               <Lock className="w-4 h-4" />
-              Pagamento 100% seguro com Mercado Pago 🔒
+              Pagamento 100% seguro com Mercado Pago
             </div>
           </div>
         </div>
@@ -548,7 +634,7 @@ export default function IQTestPage() {
   // Tela de Resultado
   if (currentScreen === 'result') {
     return (
-      <div className="min-h-screen bg-[#F5F9FF] p-4">
+      <div className="min-h-screen bg-[#F9FAFB] p-4">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-2xl p-8 shadow-2xl text-center">
             <div className="mb-8">
@@ -558,26 +644,26 @@ export default function IQTestPage() {
                 </span>
               </div>
               
-              <h2 className="text-3xl font-bold text-[#1E293B] mb-4">
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">
                 Seu QI é {quizState.iqScore}
               </h2>
               
-              <div className="bg-[#F5F9FF] rounded-xl p-6 mb-6">
-                <p className="text-lg text-[#1E293B] leading-relaxed">
+              <div className="bg-[#F9FAFB] rounded-xl p-6 mb-6">
+                <p className="text-lg text-gray-800 leading-relaxed">
                   {getIQFeedback(quizState.iqScore)}
                 </p>
               </div>
             </div>
             
             <div className="grid md:grid-cols-2 gap-4 mb-8">
-              <div className="bg-[#F5F9FF] rounded-xl p-4">
-                <h4 className="font-semibold text-[#1E293B] mb-2">Acertos</h4>
+              <div className="bg-[#F9FAFB] rounded-xl p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">Acertos</h4>
                 <p className="text-2xl font-bold text-[#2563EB]">
                   {quizState.answers.filter((answer, index) => answer === questions[index].correctAnswer).length}/25
                 </p>
               </div>
-              <div className="bg-[#F5F9FF] rounded-xl p-4">
-                <h4 className="font-semibold text-[#1E293B] mb-2">Percentil</h4>
+              <div className="bg-[#F9FAFB] rounded-xl p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">Percentil</h4>
                 <p className="text-2xl font-bold text-[#7C3AED]">
                   {Math.round(((quizState.iqScore - 70) / 60) * 100)}%
                 </p>
@@ -587,7 +673,7 @@ export default function IQTestPage() {
             <div className="space-y-4">
               <button
                 onClick={shareResult}
-                className="w-full bg-[#FACC15] hover:bg-[#FACC15]/90 text-[#1E293B] font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+                className="w-full bg-[#FACC15] hover:bg-[#FACC15]/90 text-gray-800 font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <Share2 className="w-5 h-5" />
                 Compartilhar meu resultado
@@ -604,7 +690,7 @@ export default function IQTestPage() {
         </div>
         
         <footer className="mt-8 text-center">
-          <p className="text-sm text-[#1E293B]/60">
+          <p className="text-sm text-gray-600">
             Este teste é apenas para fins de entretenimento. Resultados não substituem testes oficiais de QI.
           </p>
         </footer>
