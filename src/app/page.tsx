@@ -211,13 +211,26 @@ export default function IQTestPage() {
   const [currentScreen, setCurrentScreen] = useState<'home' | 'quiz' | 'payment' | 'result'>('home')
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [paymentError, setPaymentError] = useState<string | null>(null)
 
-  // Verificar se o pagamento foi concluído ao carregar a página
+  // Verificar status do pagamento e dados salvos ao carregar a página
   useEffect(() => {
-    const paymentStatus = localStorage.getItem('iq-test-payment')
+    // Verificar parâmetros da URL para status de pagamento
+    const urlParams = new URLSearchParams(window.location.search)
+    const paymentStatus = urlParams.get('payment')
+    
+    if (paymentStatus === 'success') {
+      // Pagamento aprovado - marcar como concluído
+      localStorage.setItem('iq-test-payment', 'completed')
+      // Limpar URL
+      window.history.replaceState({}, document.title, window.location.pathname)
+    }
+    
+    // Verificar se o pagamento foi concluído
+    const savedPaymentStatus = localStorage.getItem('iq-test-payment')
     const savedAnswers = localStorage.getItem('iq-test-answers')
     
-    if (paymentStatus === 'completed' && savedAnswers) {
+    if (savedPaymentStatus === 'completed' && savedAnswers) {
       const answers = JSON.parse(savedAnswers)
       const iqScore = calculateIQ(answers)
       setQuizState({
@@ -248,6 +261,7 @@ export default function IQTestPage() {
       paymentCompleted: false,
       iqScore: 0
     })
+    setPaymentError(null)
     // Limpar dados anteriores
     localStorage.removeItem('iq-test-payment')
     localStorage.removeItem('iq-test-answers')
@@ -301,6 +315,7 @@ export default function IQTestPage() {
 
   const handlePayment = async () => {
     setIsProcessingPayment(true)
+    setPaymentError(null)
     
     try {
       const response = await fetch('/api/create-payment', {
@@ -314,31 +329,33 @@ export default function IQTestPage() {
         })
       })
       
-      if (response.ok) {
-        const data = await response.json()
-        console.log('Dados do pagamento:', data)
-        
-        // Redirecionar para o checkout do Mercado Pago
-        // Priorizar sandbox_init_point para ambiente de teste
-        let checkoutUrl
-        if (data.is_test && data.sandbox_init_point) {
-          checkoutUrl = data.sandbox_init_point
-        } else {
-          checkoutUrl = data.init_point
-        }
-        
-        if (checkoutUrl) {
-          console.log('Redirecionando para:', checkoutUrl)
-          window.location.href = checkoutUrl
-        } else {
-          throw new Error('URL de checkout não encontrada')
-        }
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Erro ao criar preferência de pagamento')
+      }
+      
+      const data = await response.json()
+      console.log('Dados do pagamento:', data)
+      
+      // Redirecionar para o checkout do Mercado Pago
+      // Priorizar sandbox_init_point para ambiente de teste
+      let checkoutUrl
+      if (data.is_test && data.sandbox_init_point) {
+        checkoutUrl = data.sandbox_init_point
       } else {
-        throw new Error('Erro ao criar preferência de pagamento')
+        checkoutUrl = data.init_point
+      }
+      
+      if (checkoutUrl) {
+        console.log('Redirecionando para:', checkoutUrl)
+        window.location.href = checkoutUrl
+      } else {
+        throw new Error('URL de checkout não encontrada')
       }
     } catch (error) {
       console.error('Erro no pagamento:', error)
-      alert('Erro ao processar pagamento. Tente novamente.')
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
+      setPaymentError(errorMessage)
       setIsProcessingPayment(false)
     }
   }
@@ -605,6 +622,17 @@ export default function IQTestPage() {
                 Pagamento único • Resultado imediato
               </p>
             </div>
+            
+            {paymentError && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+                <p className="text-red-600 text-sm">
+                  <strong>Erro:</strong> {paymentError}
+                </p>
+                <p className="text-red-500 text-xs mt-1">
+                  Verifique se as credenciais do Mercado Pago estão configuradas corretamente.
+                </p>
+              </div>
+            )}
             
             <button
               onClick={handlePayment}
